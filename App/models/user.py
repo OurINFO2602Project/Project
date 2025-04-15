@@ -26,45 +26,7 @@ class User(db.Model):
     
     def check_password(self, password):
         """Check hashed password."""
-        return check_password_hash(self.password, password)
-    
-class UserProfile(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    phone = db.Column(db.String(20))
-    university = db.Column(db.String(100))
-    major = db.Column(db.String(100))
-    gpa = db.Column(db.Float)
-    company = db.Column(db.String(100))
-    industry = db.Column(db.String(100))
-
-    def __init__(self, first_name, last_name, email, phone=None, university, major, gpa, company, industry):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.phone = phone
-        self.address = address
-        self.university = university
-        self.major = major
-        self.gpa = gpa
-        self.company = company
-        self.industry = industry 
-
-    def get_json(self):
-        return {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'email': self.email,
-            'phone': self.phone,
-            'university': self.university,
-            'major': self.major,
-            'gpa': self.gpa,
-            'company': self.company,
-            'industry': self.industry
-        }                                                                                   
+        return check_password_hash(self.password, password)                                                     
 
 class Company(db.Model):
     __tablename__ = 'company'
