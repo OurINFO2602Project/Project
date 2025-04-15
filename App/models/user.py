@@ -26,7 +26,30 @@ class User(db.Model):
     
     def check_password(self, password):
         """Check hashed password."""
-        return check_password_hash(self.password, password)                                                     
+        return check_password_hash(self.password, password)  
+
+class Student(db.Model):
+    __tablename__ = 'student'
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    phone_number = db.Column(db.String(15), nullable=False, unique=True)
+
+    def __init__(self, first_name, last_name, email, phone_number):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.phone_number = phone_number
+
+    def get_json(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'phone_number': self.phone_number
+        }                                                   
 
 class Company(db.Model):
     __tablename__ = 'company'
