@@ -66,6 +66,19 @@ class UserProfile(db.Model):
             'industry': self.industry
         }                                                                                   
 
+class Company(UserProfile):
+    __tablename__ = 'company'
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    company_name = db.Column(db.String(100), nullable=False)
+    industry = db.Column(db.String(100), nullable=False)
+    website = db.Column(db.String(100))
+
+    def __init__(self, company_name, industry, website=None):
+        super().__init__(first_name=None, last_name=None, email=None, phone=None, university=None, major=None, gpa=None, company=company_name, industry=industry)
+        self.company_name = company_name
+        self.industry = industry
+        self.website = website
+
 class Internship(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
