@@ -79,47 +79,19 @@ class Company(UserProfile):
         self.industry = industry
         self.website = website
 
-class Internship(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    requirements = db.Column(db.Text)
-    location = db.Column(db.String(100))
-    duration = db.Column(db.String(50))  # e.g., "3 months"
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
-    application_deadline = db.Column(db.Date)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # company user
-    is_active = db.Column(db.Boolean, default=True)
-    
-    applications = db.relationship('Application', backref='internship', lazy=True)
-    
-    def __init__(self, title, description, created_by, requirements=None, location=None, 
-                 duration=None, start_date=None, end_date=None, application_deadline=None):
-        self.title = title
-        self.description = description
-        self.requirements = requirements
-        self.location = location
-        self.duration = duration
+class Internship(Company):
+    __tablename__ = 'internship'
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    position = db.Column(db.String(100), nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.Text)
+
+    def __init__(self, position, start_date, end_date, description=None):
+        super().__init__(company_name=None, industry=None)
+        self.position = position
         self.start_date = start_date
         self.end_date = end_date
-        self.application_deadline = application_deadline
-        self.created_by = created_by
+        self.description = description
     
-    def get_json(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'requirements': self.requirements,
-            'location': self.location,
-            'duration': self.duration,
-            'start_date': self.start_date.isoformat() if self.start_date else None,
-            'end_date': self.end_date.isoformat() if self.end_date else None,
-            'application_deadline': self.application_deadline.isoformat() if self.application_deadline else None,
-            'created_at': self.created_at.isoformat(),
-            'created_by': self.created_by,
-            'is_active': self.is_active
-        }
 
