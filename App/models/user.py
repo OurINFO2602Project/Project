@@ -66,26 +66,31 @@ class UserProfile(db.Model):
             'industry': self.industry
         }                                                                                   
 
-class Company(UserProfile):
+class Company(db.Model):
     __tablename__ = 'company'
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     company_name = db.Column(db.String(100), nullable=False)
     industry = db.Column(db.String(100), nullable=False)
-    website = db.Column(db.String(100))
 
-    def __init__(self, company_name, industry, website=None):
-        super().__init__(first_name=None, last_name=None, email=None, phone=None, university=None, major=None, gpa=None, company=company_name, industry=industry)
+    def __init__(self, company_name, industry):
         self.company_name = company_name
         self.industry = industry
-        self.website = website
+
+    def get_json(self):
+        return {
+            'id': self.id,
+            'company_name': self.company_name,
+            'industry': self.industry
+        }
 
 class Internship(Company):
     __tablename__ = 'internship'
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     position = db.Column(db.String(100), nullable=False)
-    start_date = db.Column(db.DateTime, nullable=False)
-    end_date = db.Column(db.DateTime, nullable=False)
-    description = db.Column(db.Text)
+    start_date = db.Column(db.String(120), nullable=False)
+    end_date = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(120), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, position, start_date, end_date, description=None):
         super().__init__(company_name=None, industry=None)
