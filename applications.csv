@@ -1,0 +1,4 @@
+1,1,1,pending,https://storage.com/john_doe_resume.pdf
+2,1,2,reviewed,https://storage.com/jane_smith_resume.pdf
+3,2,1,accepted,https://storage.com/john_doe_resume.pdf
+4,3,2,rejected,https://storage.com/jane_smith_resume.pdf
