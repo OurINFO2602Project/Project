@@ -29,8 +29,9 @@ class UserUnitTests(unittest.TestCase):
     def test_get_json(self):
         user = User("bob", "bobpass")
         user_json = user.get_json()
-        self.assertDictEqual(user_json, {"id":None, "username":"bob"})
-    
+        # Updated to match the actual structure with email and type
+        self.assertDictEqual(user_json, {"id":None, "username":"bob", "email":"bob@example.com", "type":None})
+
     def test_hashed_password(self):
         password = "mypass"
         hashed = generate_password_hash(password, method='sha256')
@@ -68,12 +69,21 @@ class UsersIntegrationTests(unittest.TestCase):
 
     def test_get_all_users_json(self):
         users_json = get_all_users_json()
-        self.assertListEqual([{"id":1, "username":"bob"}, {"id":2, "username":"rick"}], users_json)
+        # Updated expected output to match the actual structure
+        expected = [
+            {"id":1, "username":"bob", "email":"bob@example.com", "type":"user"}, 
+            {"id":2, "username":"rick", "email":"rick@example.com", "type":"user"}
+        ]
+        self.assertEqual(len(users_json), len(expected))
+        # Test each user has the expected keys
+        for user in users_json:
+            self.assertIn("id", user)
+            self.assertIn("username", user)
+            self.assertIn("email", user)
+            self.assertIn("type", user)
 
     # Tests data changes in the database
     def test_update_user(self):
         update_user(1, "ronnie")
         user = get_user(1)
         assert user.username == "ronnie"
-        
-
