@@ -13,7 +13,7 @@ class User(db.Model):
         'polymorphic_on': type
     }
 
-    def _init_(self, username, name, email, password):
+    def __init__(self, username, name, email, password):
         self.username = username
         self.name = name
         self.email = email
@@ -46,7 +46,7 @@ class Student(User):
       'polymorphic_identity': 'student',
   }
 
-  def _init_(self, username, name, email, password, gpa, degree, graduation_year):
+  def __init__(self, username, name, email, password, gpa, degree, graduation_year):
     super()._init_(username, name, email, password)
     self.gpa = gpa
     self.degree = degree
@@ -62,7 +62,7 @@ class Company(User):
       'polymorphic_identity': 'company',
   }
 
-  def _init_(self, username, name, email, password):
+  def __init__(self, username, name, email, password):
     super()._init_(username, name, email, password)
 
   def create_internship(self, title, description, salary):
@@ -80,7 +80,7 @@ class Staff(User):
       'polymorphic_identity': 'staff',
   }
 
-  def _init_(self, username, name, email, password):
+  def __init__(self, username, name, email, password):
     super()._init_(username, name, email, password)
     
   def create_shortlist(self, student, internship):
@@ -99,7 +99,7 @@ class Internship(db.Model):
   company_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
   company = db.relationship('Company', backref=db.backref('internships', lazy=True))
 
-  def _init_(self, title, description, start_date, end_date, salary):
+  def __init__(self, title, description, start_date, end_date, salary):
     self.title = title
     self.description = description
     self.start_date = start_date
@@ -125,7 +125,7 @@ class Application(db.Model):
   student = db.relationship('Student', backref=db.backref('applications', lazy=True))
   internship = db.relationship('Internship', backref=db.backref('applications', lazy=True))
 
-  def _init_(self, internship, student, url="https://file.pdf"):
+  def __init__(self, internship, student, url="https://file.pdf"):
     self.internship = internship
     self.student = student
     self.resume_url =  url
@@ -148,6 +148,8 @@ class Shortlist(db.Model):
     staff_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     student = db.relationship('Student', backref=db.backref('shortlists', lazy=True))
     internship = db.relationship('Internship', backref=db.backref('shortlisted_students', lazy=True))
+
+    user = db.relationship('Staff', backref=db.backref('shortlists', lazy=True))
     
     def get_json(self):
         return {
