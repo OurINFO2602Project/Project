@@ -154,5 +154,3 @@ class Shortlist(db.Model):
             "student_id": self.student_id,
             "student": self.student.username,
         }
-
-
