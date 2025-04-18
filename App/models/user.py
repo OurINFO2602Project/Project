@@ -42,15 +42,17 @@ class Student(User):
   gpa = db.Column(db.Float, nullable=True)
   degree = db.Column(db.String(120), nullable=True)
   graduation_year = db.Column(db.Integer, nullable=True)
+  specialization = db.Column(db.String(120), nullable=True)
   _mapper_args_ = {
       'polymorphic_identity': 'student',
   }
 
-  def _init_(self, username, name, email, password, gpa, degree, graduation_year):
+  def _init_(self, username, name, email, password, gpa, degree, graduation_year, specialization):
     super()._init_(username, name, email, password)
     self.gpa = gpa
     self.degree = degree
     self.graduation_year = graduation_year
+    self.specialization = specialization
 
   def apply_internship(self, internship, file="dummyfilestring"):
     new_application = Application(internship, self, file)
