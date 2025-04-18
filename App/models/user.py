@@ -8,12 +8,12 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     type = db.Column(db.String(50))
-    _mapper_args_ = {
+    __mapper_args__ = {
         'polymorphic_identity': 'user',
         'polymorphic_on': type
     }
 
-    def _init_(self, username, name, email, password):
+    def __init__(self, username, name, email, password):
         self.username = username
         self.name = name
         self.email = email
@@ -27,7 +27,7 @@ class User(db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
     
-    def _repr_(self):
+    def __repr__(self):
         return f'<User {self.id} {self.username} - {self.email}>'
 
     def get_json(self):
@@ -53,6 +53,15 @@ class Student(User):
     self.degree = degree
     self.graduation_year = graduation_year
     self.specialization = specialization
+=======
+  __tablename__ = 'student'
+  __mapper_args__ = {
+      'polymorphic_identity': 'student',
+  }
+
+  def __init__(self, username, name, email, password):
+    super().__init__(username, name, email, password)
+>>>>>>> e5f27b44394556a5c60c8002171e5cb73b49387a
 
   def apply_internship(self, internship, file="dummyfilestring"):
     new_application = Application(internship, self, file)
@@ -60,12 +69,13 @@ class Student(User):
     return new_application
 
 class Company(User):
-  _mapper_args_ = {
+  __tablename__ = 'company'
+  __mapper_args__ = {
       'polymorphic_identity': 'company',
   }
 
-  def _init_(self, username, name, email, password):
-    super()._init_(username, name, email, password)
+  def __init__(self, username, name, email, password):
+    super().__init__(username, name, email, password)
 
   def create_internship(self, title, description, salary):
     newinternship = Internship(title, description, salary)
@@ -78,12 +88,13 @@ class Company(User):
       db.session.commit()
     
 class Staff(User):
-  _mapper_args_ = {
+  __tablename__ = 'staff'
+  __mapper_args__ = {
       'polymorphic_identity': 'staff',
   }
 
-  def _init_(self, username, name, email, password):
-    super()._init_(username, name, email, password)
+  def __init__(self, username, name, email, password):
+    super().__init__(username, name, email, password)
     
   def create_shortlist(self, student, internship):
     shortlist_entry = Shortlist(student=student, internship=internship)
@@ -101,7 +112,7 @@ class Internship(db.Model):
   company_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
   company = db.relationship('Company', backref=db.backref('internships', lazy=True))
 
-  def _init_(self, title, description, start_date, end_date, salary):
+  def __init__(self, title, description, start_date, end_date, salary):
     self.title = title
     self.description = description
     self.start_date = start_date
@@ -127,7 +138,7 @@ class Application(db.Model):
   student = db.relationship('Student', backref=db.backref('applications', lazy=True))
   internship = db.relationship('Internship', backref=db.backref('applications', lazy=True))
 
-  def _init_(self, internship, student, url="https://file.pdf"):
+  def __init__(self, internship, student, url="https://file.pdf"):
     self.internship = internship
     self.student = student
     self.resume_url =  url
