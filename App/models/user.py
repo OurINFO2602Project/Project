@@ -86,6 +86,7 @@ class Staff(User):
     db.session.commit()
     return shortlist_entry
     
+
 class Internship(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(80), nullable=False)
@@ -113,6 +114,7 @@ class Internship(db.Model):
         "salary": self.salary,
     }
 
+
 class Application(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   internship_id = db.Column(db.Integer, db.ForeignKey('internship.id'), nullable=False)
@@ -125,6 +127,7 @@ class Application(db.Model):
   student = db.relationship('Student', backref=db.backref('applications', lazy=True))
   internship = db.relationship('Internship', backref=db.backref('applications', lazy=True))
 
+    
   def __init__(self, internship, student, url="https://file.pdf"):
     self.internship = internship
     self.student = student
@@ -140,7 +143,8 @@ class Application(db.Model):
         "status": self.status,
         "resume_url": self.resume_url
     }
-    
+
+
 class Shortlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     internship_id = db.Column(db.Integer, db.ForeignKey('internship.id'), nullable=False)
